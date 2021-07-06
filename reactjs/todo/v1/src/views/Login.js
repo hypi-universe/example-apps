@@ -49,7 +49,7 @@ export default function Login() {
   const history = useHistory();
 
   // handle login
-  function login(data) {
+  function login() {
     history.push("/dashboard");
   }
 
@@ -63,8 +63,7 @@ export default function Login() {
           <h4 className={classes.cardCategory}>Hypi Todo example login</h4>
         </CardHeader>
         <CardBody>
-          <form
-          >
+          <form>
             <CustomInput
               required
               inputprops={{ autoFocus: true }}

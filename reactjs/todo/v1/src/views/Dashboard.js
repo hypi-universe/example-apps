@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import styled from 'styled-components'
+import React, { useState } from "react";
+import styled from "styled-components";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -15,24 +15,29 @@ import Button from "../components/CustomButtons/Button";
 import CustomTable from "../components/Table/CustomTable";
 import styles from "../assets/dashboardStyle";
 import AddTodoForm from "./AddTodoForm";
+import { useProductsQuery } from "../generated/graphql";
 
 const useStyles = makeStyles(styles);
 
 const Main = styled.div`
-    padding: 3rem 11rem;
-    background: #99999926;
+  padding: 3rem 11rem;
+  background: #99999926;
 `;
 
 export default function Dashboard() {
-    const classes = useStyles();
-    const [isAddTask, setTask] = useState(false);
+  const { loading, error, data } = useProductsQuery({
+    variables: { arcql: "*" },
+  });
+  console.log("data>>>", data);
+  const classes = useStyles();
+  const [isAddTask, setTask] = useState(false);
 
-    // add task
+  // add task
   function addTask() {
     setTask(!isAddTask);
   }
 
-    // table list columns
+  // table list columns
   const columns = [
     {
       title: "ID",
@@ -55,41 +60,41 @@ export default function Dashboard() {
       key: "status",
     },
     {
-        title: "Action",
-        key: "action",
-        render: (rowData) => {
-          return (
-            <React.Fragment>
-              <Tooltip title={"Edit"}>
-                <span>
-                  <Button
-                    onClick={() => console.log("edit")}
-                    color="success"
-                    justIcon
-                    round
-                    size="sm"
-                  >
-                    <EditIcon />
-                  </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title={"Delete"}>
-                <span>
-                  <Button
-                    size="sm"
-                    color="danger"
-                    justIcon
-                    round
-                    onClick={() => console.log("delete")}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </span>
-              </Tooltip>
-            </React.Fragment>
-          );
-        },
-      }
+      title: "Action",
+      key: "action",
+      render: (rowData) => {
+        return (
+          <React.Fragment>
+            <Tooltip title={"Edit"}>
+              <span>
+                <Button
+                  onClick={() => console.log("edit")}
+                  color="success"
+                  justIcon
+                  round
+                  size="sm"
+                >
+                  <EditIcon />
+                </Button>
+              </span>
+            </Tooltip>
+            <Tooltip title={"Delete"}>
+              <span>
+                <Button
+                  size="sm"
+                  color="danger"
+                  justIcon
+                  round
+                  onClick={() => console.log("delete")}
+                >
+                  <DeleteIcon />
+                </Button>
+              </span>
+            </Tooltip>
+          </React.Fragment>
+        );
+      },
+    },
   ];
   const todoList = [
     {
@@ -100,35 +105,32 @@ export default function Dashboard() {
       status: "Done",
     },
     {
-        id: 1,
-        title: "Test 1",
-        person: "Atiq",
-        date: "05-July-2021",
-        status: "Done",
-      },
-      {
-        id: 1,
-        title: "Test 1",
-        person: "Atiq",
-        date: "05-July-2021",
-        status: "Done",
-      },
-      {
-        id: 1,
-        title: "Test 1",
-        person: "Atiq",
-        date: "05-July-2021",
-        status: "Done",
-      },
+      id: 1,
+      title: "Test 1",
+      person: "Atiq",
+      date: "05-July-2021",
+      status: "Done",
+    },
+    {
+      id: 1,
+      title: "Test 1",
+      person: "Atiq",
+      date: "05-July-2021",
+      status: "Done",
+    },
+    {
+      id: 1,
+      title: "Test 1",
+      person: "Atiq",
+      date: "05-July-2021",
+      status: "Done",
+    },
   ];
 
   return (
     <Main>
-        <AddTodoForm
-        isOpen={isAddTask}
-        handleModal={addTask}
-      />
-     <GridContainer>
+      <AddTodoForm isOpen={isAddTask} handleModal={addTask} />
+      <GridContainer>
         <Card>
           <CardHeader color="info">
             <h4 className={classes.cardTitleWhite}>Todo list</h4>
