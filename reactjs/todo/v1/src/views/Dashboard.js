@@ -15,7 +15,7 @@ import Button from "../components/CustomButtons/Button";
 import CustomTable from "../components/Table/CustomTable";
 import styles from "../assets/dashboardStyle";
 import AddTodoForm from "./AddTodoForm";
-import { useProductsQuery } from "../generated/graphql";
+import { useProductsQuery } from "../generated/loginGraphql";
 
 const useStyles = makeStyles(styles);
 
