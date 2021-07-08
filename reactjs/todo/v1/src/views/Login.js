@@ -12,6 +12,7 @@ import CardIcon from "../components/Card/CardIcon";
 import CardBody from "../components/Card/CardBody";
 import CustomInput from "../components/CustomInput/CustomInput";
 import CustomButton from "../components/CustomButtons/Button";
+import { login } from "../generated/graphql";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
 
@@ -47,9 +48,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
+  // const { loading, error, data } = Query.login({
+  //   variables: { username: "atiqmasood", password: "atiq123" },
+  // });
 
   // handle login
-  function login(data) {
+  function handleLogin() {
     history.push("/dashboard");
   }
 
@@ -63,8 +67,7 @@ export default function Login() {
           <h4 className={classes.cardCategory}>Hypi Todo example login</h4>
         </CardHeader>
         <CardBody>
-          <form
-          >
+          <form>
             <CustomInput
               required
               inputprops={{ autoFocus: true }}
@@ -87,7 +90,7 @@ export default function Login() {
             />
             <CustomButton
               className={classes.loginBtn}
-              onClick={login}
+              onClick={handleLogin}
               color="info"
             >
               Login

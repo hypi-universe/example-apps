@@ -1,0 +1,7 @@
+domain: passivated.apps.hypi.app
+release:
+  name: latest
+  hypi:
+    id: 01F9Y5MG4XJYTQ028M5H748550
+hypi:
+  id: 01F9Y5MMDZ548NAE48SBJ6NARB

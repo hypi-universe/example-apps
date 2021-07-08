@@ -1,0 +1,13 @@
+<mat-list-item>
+  <div mat-line class="todoItemText">{{ todo.title }}</div>
+  <div mat-line class="todoItemText">{{ todo.description }}</div>
+  <button mat-icon-button *ngIf="!todo.completed" (click)="onComplete(todo)">
+    <mat-icon color="primary">check</mat-icon>
+  </button>
+  <button mat-icon-button *ngIf="!todo.completed" (click)="onComplete(todo)">
+    <mat-icon color="primary">edit</mat-icon>
+  </button>
+  <button mat-icon-button>
+    <mat-icon color="warn" (click)="onDelete(todo)">delete</mat-icon>
+  </button>
+</mat-list-item>

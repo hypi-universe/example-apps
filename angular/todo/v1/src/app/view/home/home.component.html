@@ -1,0 +1,16 @@
+<div>
+  <h1>Todos</h1>
+  <div class="container">
+    <app-add-todo (addTodo)="addTodo($event)"></app-add-todo>
+    <mat-selection-list *ngFor="let todo of todos">
+      <mat-card class="todoItem">
+        <app-todo
+          [todo]="todo"
+          (deleteTodo)="deleteTodo($event)"
+          (completeTodo)="completeTodo($event)"
+        >
+        </app-todo>
+      </mat-card>
+    </mat-selection-list>
+  </div>
+</div>

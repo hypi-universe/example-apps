@@ -1,0 +1,13 @@
+website: https://hypi.app/apps
+name: ReactjsTodoApp
+label: ReactjsTodoApp
+releases:
+  - name: latest
+    schema:
+      types: schema.graphql
+    status: PUBLISHED
+    notes: latest version
+    hypi:
+      id: 01F9Y5MG4XJYTQ028M5H748550
+hypi:
+  id: 01F9Y5MG4V73KP71H6BB3DEBP7

@@ -8,7 +8,7 @@ export default function MainRoute() {
   return (
     <div>
       <Switch>
-        <Route path="/dashboard" component={Dashboard} />
+        <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path={`/`} component={Login} />
       </Switch>
     </div>
