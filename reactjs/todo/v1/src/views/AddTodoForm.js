@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 // core components
 import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
 import CustomInput from "../components/CustomInput/CustomInput";
 import Button from "../components/CustomButtons/Button";
 import CustomModal from "../components/CustomModal/CustomModal";
+import { useMutation } from "@apollo/client";
+import { UPDATE_TODOS } from "../graphql/queries";
 
-export default function AddTodoForm(props) {
-  const { isOpen, handleModal } = props;
+export default function AddTodoForm({
+  onChange,
+  stateDate,
+  isOpen,
+  handleModal,
+}) {
+  const [upsert, { error }] = useMutation(UPDATE_TODOS);
+  const { title, person, status, date, id } = stateDate;
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    onChange(name, value);
+  }
 
   // handle submit
-  function onSubmit(data) {
+  function onSubmit() {
+    let formValues = {
+      title,
+      person,
+      date: null,
+      status,
+    };
+    if (id) {
+      // in update case
+      formValues = { ...formValues, hypi: { id } };
+    }
+    upsert({
+      variables: {
+        values: {
+          Todos: [formValues],
+        },
+      },
+    });
     handleModal();
   }
 
@@ -25,12 +55,7 @@ export default function AddTodoForm(props) {
             <Button onClick={handleModal} key="cancel" size="sm" color="rose">
               Cancel
             </Button>
-            <Button
-              key="save"
-              onClick={onSubmit}
-              size="sm"
-              color="info"
-            >
+            <Button key="save" onClick={onSubmit} size="sm" color="info">
               save
             </Button>
           </React.Fragment>
@@ -43,6 +68,8 @@ export default function AddTodoForm(props) {
                 inputprops={{ autoFocus: true }}
                 labeltext="Title"
                 name="title"
+                value={title}
+                onChange={handleChange}
                 formcontrolprops={{
                   fullWidth: true,
                 }}
@@ -53,6 +80,8 @@ export default function AddTodoForm(props) {
                 inputprops={{ autoFocus: true }}
                 labeltext="Person"
                 name="person"
+                value={person}
+                onChange={handleChange}
                 formcontrolprops={{
                   fullWidth: true,
                 }}
@@ -73,6 +102,8 @@ export default function AddTodoForm(props) {
                 inputprops={{ autoFocus: true }}
                 labeltext="Status"
                 name="status"
+                value={status}
+                onChange={handleChange}
                 formcontrolprops={{
                   fullWidth: true,
                 }}

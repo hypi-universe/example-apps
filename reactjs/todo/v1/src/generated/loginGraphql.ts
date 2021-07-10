@@ -57,6 +57,19 @@ export const ProductsDocument = gql`
 }
 ${ProductFieldsFragmentDoc}`;
 
+export const LoginDocument = gql`
+    query login($username: String!, $password: String) {
+  login(type: login, username: $username, password: $password) {
+    data {
+      login {
+        ...ProductFields
+      }
+    }
+  }
+}
+${ProductFieldsFragmentDoc}`;
+
+
 export type ProductFieldsFragment = (
     { __typename?: 'Product' }
     & Pick<Product, 'title' | 'description'>
@@ -78,20 +91,18 @@ export type ProductsQuery = (
 
   export type LoginQuery = (
     { __typename?: 'Query' }
-    & { find: (
-      { __typename?: 'HypiFilterConnection' }
-      & { edges?: Maybe<Array<(
-        { __typename?: 'HypiResultEdge' }
-        & { node: (
-          { __typename?: 'Product' }
-          & ProductFieldsFragment
-        ) | { __typename?: 'PageInfo' } | { __typename?: 'HypiResultEdge' } | { __typename?: 'HypiFilterConnection' } | { __typename?: 'HypiEnv' } | { __typename?: 'Pair' } | { __typename?: 'AggInt' } | { __typename?: 'AggFloat' } | { __typename?: 'AggOtherScalar' } | { __typename?: 'Script' } | { __typename?: 'RequestTemplate' } | { __typename?: 'NotificationCtx' } | { __typename?: 'Notification' } | { __typename?: 'URL' } | { __typename?: 'Currency' } | { __typename?: 'Coordinate' } | { __typename?: 'GeoEnvelope' } | { __typename?: 'Language' } | { __typename?: 'Address' } | { __typename?: 'PersonName' } | { __typename?: 'Phone' } | { __typename?: 'Email' } | { __typename?: 'Password' } | { __typename?: 'RemoteLogin' } | { __typename?: 'LoginAttempt' } | { __typename?: 'BruteForceDetectionOptions' } | { __typename?: 'OAuth2AuthorizedClient' } | { __typename?: 'AuthClient' } | { __typename?: 'ABACPolicy' } | { __typename?: 'ABACTag' } | { __typename?: 'Image' } | { __typename?: 'EmailVerification' } | { __typename?: 'EmailTemplate' } | { __typename?: 'EmailSendingAttempt' } | { __typename?: 'PasswordReminder' } | { __typename?: 'Webhook' } | { __typename?: 'WebhookResponse' } | { __typename?: 'LogMessage' } | { __typename?: 'GraphQLRef' } | { __typename?: 'WorkflowStepData' } | { __typename?: 'WorkflowStep' } | { __typename?: 'AccessToken' } | { __typename?: 'StorageCounter' } | { __typename?: 'PermissionDescription' } | { __typename?: 'Hypi' } | { __typename?: 'Country' } | { __typename?: 'Account' } | { __typename?: 'Person' } | { __typename?: 'Organisation' } | { __typename?: 'OAuthProvider' } | { __typename?: 'Realm' } | { __typename?: 'Group' } | { __typename?: 'Role' } | { __typename?: 'RolePolicy' } | { __typename?: 'ClientPolicy' } | { __typename?: 'TimePolicy' } | { __typename?: 'AggregatedPolicy' } | { __typename?: 'GroupPolicy' } | { __typename?: 'AccountPolicy' } | { __typename?: 'RealmPolicy' } | { __typename?: 'RealmLink' } | { __typename?: 'Permission' } | { __typename?: 'File' } | { __typename?: 'Video' } | { __typename?: 'EmailMessage' } | { __typename?: 'Workflow' } | { __typename?: 'WorkflowSession' } | { __typename?: 'Counter' } | { __typename?: 'Gauge' } | { __typename?: 'ServerlessResponse' } }
-      )>> }
+    & { login: (
+      { __typename?: 'data' }
     ) }
   );
 
   export type ProductsQueryVariables = Exact<{
     arcql: Scalars['String'];
+  }>;
+
+  export type LoginQueryVariables = Exact<{
+    username: Scalars['String'];
+    password: Scalars['String'];
   }>;
 
   export function useProductsQuery(baseOptions: Apollo.QueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
@@ -101,7 +112,7 @@ export type ProductsQuery = (
 
   export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
     const options = {...defaultOptions, ...baseOptions}
-    return Apollo.useQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
+    return Apollo.useQuery<LoginQuery, LoginQueryVariables>(ProductsDocument, options);
   }
 
   export type ProductsQueryHookResult = ReturnType<typeof useProductsQuery>;
