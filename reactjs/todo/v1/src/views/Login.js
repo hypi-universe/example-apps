@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 // @material-ui/core components
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,9 +12,11 @@ import CardIcon from "../components/Card/CardIcon";
 import CardBody from "../components/Card/CardBody";
 import CustomInput from "../components/CustomInput/CustomInput";
 import CustomButton from "../components/CustomButtons/Button";
-import { login } from "../generated/graphql";
+//import { login } from "../generated/graphql";
+import { useLazyQuery } from "@apollo/client";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
+import { LoginByEmailQuery } from "../graphql/queries";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,12 +50,32 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles();
   const history = useHistory();
-  // const { loading, error, data } = Query.login({
-  //   variables: { username: "atiqmasood", password: "atiq123" },
-  // });
+  const [state, setState] = useState({
+    email: "",
+    password: "",
+    isError: false,
+  });
+  const { email, password, isError } = state;
+  const [loginUser, { data }] = useLazyQuery(LoginByEmailQuery);
 
   // handle login
   function handleLogin() {
+    if (email && password) {
+      loginUser({
+        variables: { email: email, password: password },
+      });
+    } else {
+      setState({ ...state, isError: true });
+    }
+  }
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setState({ ...state, [name]: value, isError: false });
+  }
+
+  if (data?.loginByEmail?.sessionToken) {
+    window.localStorage.setItem("user", JSON.stringify({ id: 1 }));
     history.push("/dashboard");
   }
 
@@ -74,9 +96,11 @@ export default function Login() {
               labeltext="Email address"
               type="email"
               name="email"
+              value={email}
               formcontrolprops={{
                 fullWidth: true,
               }}
+              onChange={handleChange}
             />
             <CustomInput
               required
@@ -84,10 +108,17 @@ export default function Login() {
               id="password"
               type="password"
               name="password"
+              value={password}
               formcontrolprops={{
                 fullWidth: true,
               }}
+              onChange={handleChange}
             />
+            {isError && (
+              <div style={{ color: "red" }}>
+                Please enter valid email and password
+              </div>
+            )}
             <CustomButton
               className={classes.loginBtn}
               onClick={handleLogin}

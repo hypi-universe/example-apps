@@ -1,12 +1,10 @@
 import MainRoute from "./routes/routes";
-import { Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  useQuery,
-  gql,
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
@@ -39,9 +37,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Router history={hist}>
-        <Switch>
-          <Route path="/" component={MainRoute} />
-        </Switch>
+        <Route path="/" component={MainRoute} />
       </Router>
     </ApolloProvider>
   );

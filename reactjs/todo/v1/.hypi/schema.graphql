@@ -34,3 +34,10 @@ type Product {
   title: String
   description: String
 }
+type Todos {
+  hypi: Hypi
+  title: String
+  person: String
+  date: DateTime
+  status: String
+}

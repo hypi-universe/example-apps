@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -7,6 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 // core components
+import CustomButton from "../components/CustomButtons/Button";
 import GridContainer from "../components/Grid/GridContainer";
 import Card from "../components/Card/Card";
 import CardHeader from "../components/Card/CardHeader";
@@ -15,7 +17,8 @@ import Button from "../components/CustomButtons/Button";
 import CustomTable from "../components/Table/CustomTable";
 import styles from "../assets/dashboardStyle";
 import AddTodoForm from "./AddTodoForm";
-import { useProductsQuery } from "../generated/loginGraphql";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_ALL_TODOS, DELETE_TODO } from "../graphql/queries";
 
 const useStyles = makeStyles(styles);
 
@@ -25,24 +28,63 @@ const Main = styled.div`
 `;
 
 export default function Dashboard() {
-  const { loading, error, data } = useProductsQuery({
+  const history = useHistory();
+  const { data } = useQuery(GET_ALL_TODOS, {
     variables: { arcql: "*" },
   });
-  console.log("data>>>", data);
+  const [deleteItem] = useMutation(DELETE_TODO);
+
+  const [state, setState] = useState({
+    formValues: {
+      title: "",
+      person: "",
+      status: "",
+      date: null,
+    },
+    isAddTask: false,
+  });
+  const { formValues, isAddTask } = state;
   const classes = useStyles();
-  const [isAddTask, setTask] = useState(false);
+
+  // handle change form values
+  function handleChange(name, value) {
+    setState({ ...state, formValues: { ...formValues, [name]: value } });
+  }
 
   // add task
-  function addTask() {
-    setTask(!isAddTask);
+  function addTask(e, item = null) {
+    setState({
+      ...state,
+      formValues: item ?? formValues,
+      isAddTask: !isAddTask,
+    });
+  }
+
+  function formatData() {
+    return (data?.find?.edges || []).map((item) => ({
+      ...item.node,
+      id: item.node?.hypi?.id,
+    }));
+  }
+
+  // update todo
+  function updateTodo(rowId) {
+    const list = formatData();
+    if (list?.length > 0) {
+      const updateItem = list.filter((x) => x.id === rowId)?.[0];
+      addTask(null, updateItem);
+    }
+  }
+
+  // delete todo
+  function deleteTodo(rowId) {
+    deleteItem({
+      variables: { arcql: `hypi.id = '${rowId}'` },
+    });
   }
 
   // table list columns
   const columns = [
-    {
-      title: "ID",
-      key: "id",
-    },
     {
       title: "Task title",
       key: "title",
@@ -50,10 +92,6 @@ export default function Dashboard() {
     {
       title: "Person",
       key: "person",
-    },
-    {
-      title: "Date",
-      key: "date",
     },
     {
       title: "Status",
@@ -68,7 +106,7 @@ export default function Dashboard() {
             <Tooltip title={"Edit"}>
               <span>
                 <Button
-                  onClick={() => console.log("edit")}
+                  onClick={() => updateTodo(rowData?.id)}
                   color="success"
                   justIcon
                   round
@@ -85,7 +123,7 @@ export default function Dashboard() {
                   color="danger"
                   justIcon
                   round
-                  onClick={() => console.log("delete")}
+                  onClick={() => deleteTodo(rowData.id)}
                 >
                   <DeleteIcon />
                 </Button>
@@ -96,40 +134,28 @@ export default function Dashboard() {
       },
     },
   ];
-  const todoList = [
-    {
-      id: 1,
-      title: "Test 1",
-      person: "Atiq",
-      date: "05-July-2021",
-      status: "Done",
-    },
-    {
-      id: 1,
-      title: "Test 1",
-      person: "Atiq",
-      date: "05-July-2021",
-      status: "Done",
-    },
-    {
-      id: 1,
-      title: "Test 1",
-      person: "Atiq",
-      date: "05-July-2021",
-      status: "Done",
-    },
-    {
-      id: 1,
-      title: "Test 1",
-      person: "Atiq",
-      date: "05-July-2021",
-      status: "Done",
-    },
-  ];
+
+  function logout() {
+    window.localStorage.clear();
+    history.push("/login");
+  }
 
   return (
     <Main>
-      <AddTodoForm isOpen={isAddTask} handleModal={addTask} />
+      <AddTodoForm
+        isOpen={isAddTask}
+        handleModal={addTask}
+        onChange={handleChange}
+        stateDate={formValues}
+      />
+      <CustomButton
+        style={{ float: "right" }}
+        className={classes.loginBtn}
+        onClick={logout}
+        color="rose"
+      >
+        Logout
+      </CustomButton>
       <GridContainer>
         <Card>
           <CardHeader color="info">
@@ -139,7 +165,7 @@ export default function Dashboard() {
             <Button onClick={addTask} size="sm" color="info">
               Add Task
             </Button>
-            <CustomTable columns={columns} data={todoList} />
+            <CustomTable columns={columns} data={formatData()} />
           </CardBody>
         </Card>
       </GridContainer>
