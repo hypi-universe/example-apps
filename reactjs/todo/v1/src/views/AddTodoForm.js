@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 // core components
 import GridItem from "../components/Grid/GridItem";
 import GridContainer from "../components/Grid/GridContainer";
@@ -14,8 +14,8 @@ export default function AddTodoForm({
   isOpen,
   handleModal,
 }) {
-  const [upsert, { error }] = useMutation(UPDATE_TODOS);
-  const { title, person, status, date, id } = stateDate;
+  const [upsert] = useMutation(UPDATE_TODOS);
+  const { title, person, status, id } = stateDate;
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -82,16 +82,6 @@ export default function AddTodoForm({
                 name="person"
                 value={person}
                 onChange={handleChange}
-                formcontrolprops={{
-                  fullWidth: true,
-                }}
-              />
-            </GridItem>
-            <GridItem xs={12} sm={12} md={6}>
-              <CustomInput
-                inputprops={{ autoFocus: true }}
-                labeltext="Date"
-                name="date"
                 formcontrolprops={{
                   fullWidth: true,
                 }}

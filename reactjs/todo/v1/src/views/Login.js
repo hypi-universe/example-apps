@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 // @material-ui/core components
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,7 +13,7 @@ import CardBody from "../components/Card/CardBody";
 import CustomInput from "../components/CustomInput/CustomInput";
 import CustomButton from "../components/CustomButtons/Button";
 //import { login } from "../generated/graphql";
-import { Apollo, gql, useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
 import { LoginByEmailQuery } from "../graphql/queries";
@@ -56,44 +56,27 @@ export default function Login() {
     isError: false,
   });
   const { email, password, isError } = state;
-  const [loginUser, { called, loading, data }] = useLazyQuery(
-    LoginByEmailQuery,
-    {
-      variables: { email: email, password: password },
-    }
-  );
-
-  useEffect(() => {
-    if (called) {
-      if (data?.loginByEmail?.sessionToken) {
-        console.log("navigate to dashboard");
-      } else {
-        setState({ ...state, isError: true });
-      }
-      console.log("useeffect", data, loading, called);
-    }
-  }, [data]);
+  const [loginUser, { data }] = useLazyQuery(LoginByEmailQuery);
 
   // handle login
   function handleLogin() {
-    history.push("/dashboard");
-    // if (email && password) {
-    //   loginUser();
-    //   console.log("dataaaaaaaa", data, loading, called);
-    //   // if (data?.loginByEmail?.errorMsg) {
-    //   //   setState({ ...state, isError: true });
-    //   // } else {
-    //   //   console.log("dataaaaaaaa", data, loading);
-    //   //   //history.push("/dashboard");
-    //   // }
-    // } else {
-    //   setState({ ...state, isError: true });
-    // }
+    if (email && password) {
+      loginUser({
+        variables: { email: email, password: password },
+      });
+    } else {
+      setState({ ...state, isError: true });
+    }
   }
 
   function handleChange(e) {
     const { name, value } = e.target;
     setState({ ...state, [name]: value, isError: false });
+  }
+
+  if (data?.loginByEmail?.sessionToken) {
+    window.localStorage.setItem("user", JSON.stringify({ id: 1 }));
+    history.push("/dashboard");
   }
 
   return (

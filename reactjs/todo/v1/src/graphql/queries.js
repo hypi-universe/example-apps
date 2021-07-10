@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+
 export const LoginByEmailQuery = gql`
   query loginByEmail($email: String!, $password: String!) {
     loginByEmail(email: $email, password: $password) {
@@ -10,22 +11,6 @@ export const LoginByEmailQuery = gql`
   }
 `;
 
-// export const GET_ALL_TODOS = gql`
-//   query getMyTodos() {
-//     find(type: Todos) {
-//       edges {
-//         node {
-//           ... on Todos {
-//             title
-//             person
-//             date
-//             status
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
 export const ProductFieldsFragmentDoc = gql`
   fragment ProductFields on Todos {
     hypi {
@@ -39,7 +24,7 @@ export const ProductFieldsFragmentDoc = gql`
 `;
 
 export const GET_ALL_TODOS = gql`
-  query todos($arcql: String!) {
+  query getTodos($arcql: String!) {
     find(type: Todos, arcql: $arcql) {
       edges {
         node {

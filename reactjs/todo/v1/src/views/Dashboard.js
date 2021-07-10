@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -7,6 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 // core components
+import CustomButton from "../components/CustomButtons/Button";
 import GridContainer from "../components/Grid/GridContainer";
 import Card from "../components/Card/Card";
 import CardHeader from "../components/Card/CardHeader";
@@ -26,7 +28,8 @@ const Main = styled.div`
 `;
 
 export default function Dashboard() {
-  const { loading, data } = useQuery(GET_ALL_TODOS, {
+  const history = useHistory();
+  const { data } = useQuery(GET_ALL_TODOS, {
     variables: { arcql: "*" },
   });
   const [deleteItem] = useMutation(DELETE_TODO);
@@ -50,15 +53,6 @@ export default function Dashboard() {
 
   // add task
   function addTask(e, item = null) {
-    let selectItem = {
-      title: "",
-      person: "",
-      status: "",
-      date: null,
-    };
-    if (item) {
-      selectItem = item;
-    }
     setState({
       ...state,
       formValues: item ?? formValues,
@@ -98,10 +92,6 @@ export default function Dashboard() {
     {
       title: "Person",
       key: "person",
-    },
-    {
-      title: "Date",
-      key: "date",
     },
     {
       title: "Status",
@@ -144,7 +134,12 @@ export default function Dashboard() {
       },
     },
   ];
-  console.log("data>>>", formatData());
+
+  function logout() {
+    window.localStorage.clear();
+    history.push("/login");
+  }
+
   return (
     <Main>
       <AddTodoForm
@@ -153,6 +148,14 @@ export default function Dashboard() {
         onChange={handleChange}
         stateDate={formValues}
       />
+      <CustomButton
+        style={{ float: "right" }}
+        className={classes.loginBtn}
+        onClick={logout}
+        color="rose"
+      >
+        Logout
+      </CustomButton>
       <GridContainer>
         <Card>
           <CardHeader color="info">
