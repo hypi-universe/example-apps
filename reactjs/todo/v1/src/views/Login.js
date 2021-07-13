@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // @material-ui/core components
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
-  const history = useHistory();
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -62,6 +61,13 @@ export default function Login() {
   useEffect(() => {
     if (data?.loginByEmail?.errorCode) {
       setState({ ...state, isError: true });
+    }
+    if (data?.loginByEmail?.sessionToken) {
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({ token: data?.loginByEmail?.sessionToken })
+      );
+      window.location.reload(true);
     }
   }, [data]);
 
@@ -79,11 +85,6 @@ export default function Login() {
   function handleChange(e) {
     const { name, value } = e.target;
     setState({ ...state, [name]: value, isError: false });
-  }
-
-  if (data?.loginByEmail?.sessionToken) {
-    window.localStorage.setItem("user", JSON.stringify({ id: 1 }));
-    history.push("/dashboard");
   }
 
   return (

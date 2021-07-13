@@ -17,7 +17,7 @@ import Button from "../components/CustomButtons/Button";
 import CustomTable from "../components/Table/CustomTable";
 import styles from "../assets/dashboardStyle";
 import AddTodoForm from "./AddTodoForm";
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { GET_ALL_TODOS, DELETE_TODO } from "../graphql/queries";
 
 const useStyles = makeStyles(styles);
@@ -29,9 +29,7 @@ const Main = styled.div`
 
 export default function Dashboard() {
   const history = useHistory();
-  const { data } = useQuery(GET_ALL_TODOS, {
-    variables: { arcql: "*" },
-  });
+  const [getTodos, { data }] = useLazyQuery(GET_ALL_TODOS);
   const [deleteItem] = useMutation(DELETE_TODO);
   const formInitState = {
     title: "",
@@ -46,6 +44,12 @@ export default function Dashboard() {
   });
   const { formValues, isAddTask, list } = state;
   const classes = useStyles();
+
+  useEffect(() => {
+    getTodos({
+      variables: { arcql: "*" },
+    });
+  }, []);
 
   useEffect(() => {
     setState({ ...state, list: formatData() });

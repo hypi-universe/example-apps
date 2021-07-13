@@ -9,7 +9,7 @@ export default function MainRoute() {
   const history = useHistory();
   const isLoggedIn = JSON.parse(window.localStorage.getItem("user"));
   useEffect(() => {
-    if (isLoggedIn?.id) {
+    if (isLoggedIn?.token) {
       history.push("/dashboard");
     } else {
       history.push("/login");

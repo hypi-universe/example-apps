@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 // @material-ui/core components
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -12,8 +12,6 @@ import CardIcon from "../components/Card/CardIcon";
 import CardBody from "../components/Card/CardBody";
 import CustomInput from "../components/CustomInput/CustomInput";
 import CustomButton from "../components/CustomButtons/Button";
-//import { login } from "../generated/graphql";
-import { useLazyQuery } from "@apollo/client";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
 import { useMutation } from "@apollo/client";
@@ -51,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  const history = useHistory();
   const initState = {
     username: "",
     email: "",
