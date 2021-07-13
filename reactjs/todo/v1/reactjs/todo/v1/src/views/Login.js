@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 // @material-ui/core components
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -17,6 +17,7 @@ import { useLazyQuery } from "@apollo/client";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
 import { LoginByEmailQuery } from "../graphql/queries";
+import CardFooter from "../components/Card/CardFooter";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,6 +58,12 @@ export default function Login() {
   });
   const { email, password, isError } = state;
   const [loginUser, { data }] = useLazyQuery(LoginByEmailQuery);
+
+  useEffect(() => {
+    if (data?.loginByEmail?.errorCode) {
+      setState({ ...state, isError: true });
+    }
+  }, [data]);
 
   // handle login
   function handleLogin() {
@@ -128,6 +135,18 @@ export default function Login() {
             </CustomButton>
           </form>
         </CardBody>
+        <CardFooter>
+          <Link to="/signup">
+            <CustomButton
+              style={{ color: "#0b79ea" }}
+              link
+              className={classes.loginBtn}
+              color="info"
+            >
+              Create account
+            </CustomButton>
+          </Link>
+        </CardFooter>
       </Card>
       <CssBaseline />
     </Container>
