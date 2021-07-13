@@ -23,7 +23,7 @@ export default function AddTodoForm({
   }
 
   // handle submit
-  function onSubmit() {
+  function onSubmit(e) {
     let formValues = {
       title,
       person,
@@ -40,6 +40,8 @@ export default function AddTodoForm({
           Todos: [formValues],
         },
       },
+    }).then((res) => {
+      window.location.reload(true);
     });
     handleModal();
   }

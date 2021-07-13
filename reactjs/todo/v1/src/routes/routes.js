@@ -3,6 +3,7 @@ import { Switch, Route, useHistory } from "react-router-dom";
 import Dashboard from "../views/Dashboard";
 // core components
 import Login from "../views/Login";
+import SignUp from "../views/SignUp";
 
 export default function MainRoute() {
   const history = useHistory();
@@ -19,6 +20,7 @@ export default function MainRoute() {
     <div>
       <Switch>
         <Route exact path={`/login`} component={Login} />
+        <Route exact path={`/signup`} component={SignUp} />
         <Route path="/dashboard" component={Dashboard} />
       </Switch>
     </div>

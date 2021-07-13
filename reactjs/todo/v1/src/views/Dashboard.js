@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 // @material-ui/core
@@ -33,18 +33,23 @@ export default function Dashboard() {
     variables: { arcql: "*" },
   });
   const [deleteItem] = useMutation(DELETE_TODO);
-
+  const formInitState = {
+    title: "",
+    person: "",
+    status: "",
+    date: null,
+  };
   const [state, setState] = useState({
-    formValues: {
-      title: "",
-      person: "",
-      status: "",
-      date: null,
-    },
+    formValues: formInitState,
     isAddTask: false,
+    list: [],
   });
-  const { formValues, isAddTask } = state;
+  const { formValues, isAddTask, list } = state;
   const classes = useStyles();
+
+  useEffect(() => {
+    setState({ ...state, list: formatData() });
+  }, [data]);
 
   // handle change form values
   function handleChange(name, value) {
@@ -69,7 +74,6 @@ export default function Dashboard() {
 
   // update todo
   function updateTodo(rowId) {
-    const list = formatData();
     if (list?.length > 0) {
       const updateItem = list.filter((x) => x.id === rowId)?.[0];
       addTask(null, updateItem);
@@ -81,6 +85,7 @@ export default function Dashboard() {
     deleteItem({
       variables: { arcql: `hypi.id = '${rowId}'` },
     });
+    setState({ ...state, list: list?.filter((x) => x.id !== rowId) });
   }
 
   // table list columns
@@ -165,7 +170,7 @@ export default function Dashboard() {
             <Button onClick={addTask} size="sm" color="info">
               Add Task
             </Button>
-            <CustomTable columns={columns} data={formatData()} />
+            <CustomTable columns={columns} data={list} />
           </CardBody>
         </Card>
       </GridContainer>

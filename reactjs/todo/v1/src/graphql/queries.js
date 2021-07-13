@@ -43,6 +43,26 @@ export const UPDATE_TODOS = gql`
   }
 `;
 
+export const CREATE_ACCOUNT = gql`
+  mutation createAccount(
+    $username: String!
+    $password: String!
+    $email: String!
+  ) {
+    createAccount(
+      value: {
+        username: $username
+        password: { value: $password }
+        emails: [{ value: $email }]
+      }
+    ) {
+      id
+      created
+      createdBy
+    }
+  }
+`;
+
 export const DELETE_TODO = gql`
   mutation deleteItem($arcql: String!, $clearArrayReferences: Boolean = true) {
     delete(

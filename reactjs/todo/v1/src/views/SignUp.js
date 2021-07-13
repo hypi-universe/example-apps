@@ -16,7 +16,8 @@ import CustomButton from "../components/CustomButtons/Button";
 import { useLazyQuery } from "@apollo/client";
 // color
 import { infoColor, grayColor } from "../assets/Theming";
-import { LoginByEmailQuery } from "../graphql/queries";
+import { useMutation } from "@apollo/client";
+import { CREATE_ACCOUNT } from "../graphql/queries";
 import CardFooter from "../components/Card/CardFooter";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,42 +49,38 @@ const useStyles = makeStyles((theme) => ({
   loginBtn: { display: "flex", margin: "auto" },
 }));
 
-export default function Login() {
+export default function SignUp() {
   const classes = useStyles();
   const history = useHistory();
-  const [state, setState] = useState({
+  const initState = {
+    username: "",
     email: "",
     password: "",
     isError: false,
-  });
-  const { email, password, isError } = state;
-  const [loginUser, { data }] = useLazyQuery(LoginByEmailQuery);
+    success: false,
+  };
+  const [state, setState] = useState(initState);
+  const { email, password, username, isError, success } = state;
+  const [createAccount] = useMutation(CREATE_ACCOUNT);
 
-  useEffect(() => {
-    if (data?.loginByEmail?.errorCode) {
+  // handle signup
+  function createUser() {
+    if (!email || !password || !username) {
       setState({ ...state, isError: true });
+      return;
     }
-  }, [data]);
-
-  // handle login
-  function handleLogin() {
-    if (email && password) {
-      loginUser({
-        variables: { email: email, password: password },
-      });
-    } else {
-      setState({ ...state, isError: true });
-    }
+    createAccount({
+      variables: { email: email, password: password, username: username },
+    }).then((res) => {
+      if (res?.data?.createAccount?.id) {
+        setState({ ...initState, success: true });
+      }
+    });
   }
 
   function handleChange(e) {
     const { name, value } = e.target;
     setState({ ...state, [name]: value, isError: false });
-  }
-
-  if (data?.loginByEmail?.sessionToken) {
-    window.localStorage.setItem("user", JSON.stringify({ id: 1 }));
-    history.push("/dashboard");
   }
 
   return (
@@ -93,13 +90,23 @@ export default function Login() {
           <CardIcon color="info">
             <LockOutlinedIcon />
           </CardIcon>
-          <h4 className={classes.cardCategory}>Hypi Todo example login</h4>
+          <h4 className={classes.cardCategory}>Register with HYPI</h4>
         </CardHeader>
         <CardBody>
           <form>
             <CustomInput
               required
               inputprops={{ autoFocus: true }}
+              labeltext="Username"
+              name="username"
+              value={username}
+              formcontrolprops={{
+                fullWidth: true,
+              }}
+              onChange={handleChange}
+            />
+            <CustomInput
+              required
               labeltext="Email address"
               type="email"
               name="email"
@@ -113,7 +120,6 @@ export default function Login() {
               required
               labeltext="Password"
               id="password"
-              type="password"
               name="password"
               value={password}
               formcontrolprops={{
@@ -122,28 +128,31 @@ export default function Login() {
               onChange={handleChange}
             />
             {isError && (
-              <div style={{ color: "red" }}>
-                Please enter valid email and password
+              <div style={{ color: "red" }}>All fields are required</div>
+            )}
+            {success && (
+              <div style={{ color: "green" }}>
+                You are register successfully. Please login
               </div>
             )}
             <CustomButton
               className={classes.loginBtn}
-              onClick={handleLogin}
+              onClick={createUser}
               color="info"
             >
-              Login
+              SignUp
             </CustomButton>
           </form>
         </CardBody>
         <CardFooter>
-          <Link to="/signup">
+          <Link to="/login">
             <CustomButton
               style={{ color: "#0b79ea" }}
               link
               className={classes.loginBtn}
               color="info"
             >
-              Create account
+              Login
             </CustomButton>
           </Link>
         </CardFooter>
