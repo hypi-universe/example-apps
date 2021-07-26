@@ -1,0 +1,9 @@
+query todos($arcql: String!) {
+  find(type: Todos, arcql: $arcql) {
+    edges {
+      node {
+        ...TodosFields
+      }
+    }
+  }
+}

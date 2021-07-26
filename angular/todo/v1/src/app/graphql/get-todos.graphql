@@ -1,0 +1,13 @@
+query getTodo($id: String!) {
+  get(type: Todos, id: $id) {
+    ...TodosFields
+  }
+}
+
+fragment TodosFields on Todos {
+  hypi {
+    id
+  }
+  title
+  description
+}

@@ -1,0 +1,13 @@
+website: drafting.apps.hypi.app
+name: todo
+label: todo
+hypi:
+  id: 01FAW1QENKRBSG2QBA1ZAE6WFQ
+releases:
+  - name: latest
+    schema:
+      types: schema.graphql
+    status: PUBLISHED
+    notes: new release
+    hypi:
+      id: 01FAW1QEVKZNZ9D310TXNND5WW

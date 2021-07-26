@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Apollo } from 'apollo-angular';
 
 // Services
 import { AuthService } from '../../auth/auth.service';
+import { CreateAccountMutationService } from 'src/generated/graphql';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -12,7 +14,7 @@ export class RegisterComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   public loginInvalid: boolean = false;
 
-  constructor(private fb: FormBuilder, public authService: AuthService) {}
+  constructor(private fb: FormBuilder, public authService: AuthService, private apollo: Apollo, private createAccout:CreateAccountMutationService) {}
 
   async ngOnInit() {
     this.form = this.fb.group({

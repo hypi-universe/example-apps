@@ -1,0 +1,26 @@
+ query loginByEmail($email: String!, $password: String!) {
+    loginByEmail(email: $email, password: $password) {
+      sessionToken
+      sessionExpires
+      errorCode
+      errorMsg
+    }
+  }
+
+  mutation createAccount(
+    $username: String!
+    $password: String!
+    $email: String!
+  ) {
+    createAccount(
+      value: {
+        username: $username
+        password: { value: $password }
+        emails: [{ value: $email }]
+      }
+    ) {
+      id
+      created
+      createdBy
+    }
+  }

@@ -23,6 +23,8 @@ import { HomeComponent } from './view/home/home.component';
 import { TodoComponent } from './components/todo/todo.component';
 import { AddTodoComponent } from './components/add-todo/add-todo.component';
 import { EditTodoComponent } from './components/edit-todo/edit-todo.component';
+import { GraphQLModule } from './graphql/graphql.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { EditTodoComponent } from './components/edit-todo/edit-todo.component';
     ReactiveFormsModule,
 
     NgbModule,
+    GraphQLModule,
+    HttpClientModule
   ],
   entryComponents: [],
   providers: [],
